@@ -22,6 +22,7 @@ export default function App() {
       )
     );
   }
+
   return (
     <div className="app">
       <Logo />
@@ -31,7 +32,7 @@ export default function App() {
         onDeleteItem={handleDeleteItem}
         onToggleItem={handleToggleItem}
       />
-      <Stats />
+      <Stats items={items} />
     </div>
   );
 }
@@ -112,10 +113,28 @@ function Item({ item, onDeleteItem, onToggleItem }) {
     </li>
   );
 }
-function Stats() {
+function Stats({ items }) {
+  if (!items.length)
+    return (
+      <p className="footer">
+        <em>Start Adding Some items to your packing list 📦</em>
+      </p>
+    );
+  const numItems = items.length;
+  const numPacked = items.reduce(
+    (acc, current) => (current.packed ? acc + 1 : acc),
+    0
+  );
+  const percentage = Math.round((numPacked / numItems) * 100);
+
   return (
     <footer className="stats">
-      <em>👜 You have X items on your list, and you already packed X (X%)</em>
+      <em>
+        {percentage === 100
+          ? "You got everything! Ready to go 🛫"
+          : `👜 You have ${numItems} items on your list, and you already packed${" "}
+        ${numPacked}(${percentage}% ) `}
+      </em>
     </footer>
   );
 }
